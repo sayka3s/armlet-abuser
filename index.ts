@@ -1,8 +1,7 @@
-import {
-    EventsSDK,
-    LocalPlayer,
-    Menu,
-} from "://github.com"
+const octarineGlobal = (globalThis as any).octarine || (window as any).octarine;
+const EventsSDK = octarineGlobal?.EventsSDK;
+const LocalPlayer = octarineGlobal?.LocalPlayer;
+const Menu = octarineGlobal?.Menu;
 
 new (class ArmletAbuserScript {
     private readonly entry = Menu.AddEntry("Custom Armlet")
@@ -17,20 +16,19 @@ new (class ArmletAbuserScript {
     }
 
     private OnDrawUpdate(): void {
-        if (!this.enabledState.value) {
-            return
-        }
+        if (!this.enabledState.value) return
+
         const hero = LocalPlayer?.Hero
-        if (hero === undefined || !hero.IsAlive()) {
-            return
-        }
-        const armlet = hero.Spells.find(spell => spell.Name === "item_armlet")
-        if (armlet === undefined || !armlet.CanBeCasted()) {
-            return
-        }
+        if (hero === undefined || !hero.IsAlive()) return
+
+        const armlet = hero.Items?.find((item: any) => item.Name === "item_armlet")
+        if (armlet === undefined || !armlet.CanBeCasted()) return
+
         const currentHealth = hero.Health
+        const isArmletActive = armlet.ToggleState
         const currentTime = Date.now()
-        if (currentHealth < this.hpThreshold.value) {
+
+        if (currentHealth < this.hpThreshold.value && isArmletActive) {
             const randomModifier = Math.floor(Math.random() * 16) - 8
             const totalDelay = this.humanizeDelay.value + randomModifier
             if (currentTime - this.lastToggleTime > totalDelay) {
