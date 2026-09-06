@@ -1,4 +1,4 @@
-import { EventsSDK, LocalPlayer, Menu } from "://github.com";
+import { EventsSDK, LocalPlayer, Menu } from "../wrapper/index";
 
 new (class ArmletAbuserScript {
     private readonly entry = Menu.AddEntry("Custom Armlet");
